@@ -124,15 +124,15 @@ html, body { margin: 0; background: var(--bg); color: var(--fg); font-family: va
   </div>
 
   <section class="sp-card">
-    <h2 class="sp-h2">In crunch time, more sleep didn't mean more output — but the link is weak</h2>
-    <p class="sp-sub">Each dot is one faculty: its students' average sleep during demanding periods vs. their average daily productive hours. Dashed line = linear trend.</p>
+    <h2 class="sp-h2">In crunch time, students who slept more didn't report more productive hours</h2>
+    <p class="sp-sub">Each dot is one student: sleep per night during demanding periods vs. daily productive hours. Dashed line = linear trend.</p>
     <div class="sp-chart sp-h-scatter" id="chart-scatter"></div>
-    <p class="sp-note">Correlation r = <span id="fit-r">—</span> across only <span id="fit-n">—</span> faculty averages. That is a weak relationship on very few data points, so read it as “no clear link”, not as proof that sleeping more lowers productivity. Because each dot averages a whole faculty, it also can’t tell us how sleep and productivity relate for individual students, and faculties with heavier workloads may both sleep less and log more hours.</p>
+    <p class="sp-note">Correlation r = <span id="fit-r">—</span> across <span id="fit-n">—</span> plotted responses (n = 50; a few dots overlap). That is a weak-to-moderate negative link, and it doesn’t mean sleep lowers productivity: students with heavier workloads may both sleep less and log more hours. Two extreme answers (0 h and about 13 h of sleep) also pull on the trend line.</p>
   </section>
 
   <details class="sp-details">
     <summary>About this data</summary>
-    <p>Survey designed and conducted as a group project (n = 50 students, 10 faculties). I built this dashboard. Bedtime scores and faculty-level scatter values are approximate (±0.1). “Sleep lost” is typical minus demanding-period sleep; its average is the simple mean of the five program years, not weighted by how many students are in each year. Survey shares are rounded and add up to 100%.</p>
+    <p>Survey designed and conducted as a group project (n = 50 students, 10 faculties). I built this dashboard. Bedtime scores and scatter-plot values were read off the original charts and are approximate (±0.1); a few overlapping responses in the scatter plot couldn’t be separated. “Sleep lost” is typical minus demanding-period sleep; its average is the simple mean of the five program years, not weighted by how many students are in each year. Survey shares are rounded and add up to 100%.</p>
   </details>
 </main>
 
@@ -151,12 +151,19 @@ html, body { margin: 0; background: var(--bg); color: var(--fg); font-family: va
       { year: 'Year 4', typical: 8.4, demanding: 7.0 },
       { year: 'Year 5+', typical: 6.7, demanding: 6.0 }
     ],
-    faculties: [
-      { faculty: 1, sleep: 5.0, productive: 8.5 }, { faculty: 2, sleep: 5.0, productive: 4.1 },
-      { faculty: 3, sleep: 5.1, productive: 7.8 }, { faculty: 4, sleep: 5.3, productive: 10.4 },
-      { faculty: 5, sleep: 5.4, productive: 8.8 }, { faculty: 6, sleep: 5.6, productive: 8.9 },
-      { faculty: 7, sleep: 6.0, productive: 8.8 }, { faculty: 8, sleep: 6.0, productive: 7.9 },
-      { faculty: 9, sleep: 7.25, productive: 4.4 }, { faculty: 10, sleep: 7.4, productive: 7.5 }
+    respondents: [
+      { sleep: 0.0, productive: 10.1 }, { sleep: 3.2, productive: 10.9 }, { sleep: 3.3, productive: 10.8 }, { sleep: 4.0, productive: 10.9 },
+      { sleep: 4.0, productive: 9.6 }, { sleep: 4.8, productive: 4.2 }, { sleep: 5.0, productive: 16.0 }, { sleep: 5.0, productive: 7.3 },
+      { sleep: 5.0, productive: 14.0 }, { sleep: 5.0, productive: 4.1 }, { sleep: 5.0, productive: 8.5 }, { sleep: 5.1, productive: 10.9 },
+      { sleep: 5.1, productive: 7.8 }, { sleep: 5.2, productive: 14.8 }, { sleep: 5.3, productive: 10.4 }, { sleep: 5.6, productive: 10.2 },
+      { sleep: 5.6, productive: 8.9 }, { sleep: 5.6, productive: 9.2 }, { sleep: 5.6, productive: 10.9 }, { sleep: 6.0, productive: 3.0 },
+      { sleep: 6.0, productive: 7.0 }, { sleep: 6.0, productive: 7.9 }, { sleep: 6.0, productive: 3.4 }, { sleep: 6.0, productive: 5.1 },
+      { sleep: 6.1, productive: 13.3 }, { sleep: 6.2, productive: 7.7 }, { sleep: 6.2, productive: 8.6 }, { sleep: 6.2, productive: 5.0 },
+      { sleep: 6.3, productive: 9.2 }, { sleep: 6.3, productive: 5.2 }, { sleep: 6.4, productive: 8.4 }, { sleep: 6.5, productive: 2.5 },
+      { sleep: 6.8, productive: 3.9 }, { sleep: 7.0, productive: 9.0 }, { sleep: 7.0, productive: 12.0 }, { sleep: 7.1, productive: 8.1 },
+      { sleep: 7.1, productive: 10.9 }, { sleep: 7.2, productive: 4.7 }, { sleep: 7.3, productive: 4.3 }, { sleep: 7.4, productive: 9.4 },
+      { sleep: 8.0, productive: 3.1 }, { sleep: 8.0, productive: 7.7 }, { sleep: 8.0, productive: 4.6 }, { sleep: 8.1, productive: 4.9 },
+      { sleep: 9.3, productive: 8.9 }, { sleep: 9.3, productive: 11.6 }, { sleep: 12.8, productive: 2.5 }
     ],
     likert: [
       { response: 'Strongly disagree', share: 8 }, { response: 'Somewhat disagree', share: 42 },
@@ -177,7 +184,7 @@ html, body { margin: 0; background: var(--bg); color: var(--fg); font-family: va
   const bedGap = +(DATA.bedtime[0].v - DATA.bedtime[DATA.bedtime.length - 1].v).toFixed(1);
   const wakeGap = +(DATA.wakeup[0].v - DATA.wakeup[DATA.wakeup.length - 1].v).toFixed(1);
   const fit = (() => {
-    const xs = DATA.faculties.map((f) => f.sleep), ys = DATA.faculties.map((f) => f.productive), n = xs.length;
+    const xs = DATA.respondents.map((f) => f.sleep), ys = DATA.respondents.map((f) => f.productive), n = xs.length;
     const mx = d3.mean(xs), my = d3.mean(ys);
     let sxy = 0, sxx = 0, syy = 0;
     for (let i = 0; i < n; i++) { sxy += (xs[i] - mx) * (ys[i] - my); sxx += (xs[i] - mx) ** 2; syy += (ys[i] - my) ** 2; }
@@ -345,9 +352,9 @@ html, body { margin: 0; background: var(--bg); color: var(--fg); font-family: va
   // ---------- Scatter ----------
   function drawScatter() {
     const el = document.getElementById('chart-scatter');
-    const pts = DATA.faculties, W = Math.max(280, el.clientWidth), H = 300, mt = 14, mb = 44, ml = 44, mr = 12;
-    const svg = svgIn(el, W, H, 'Scatter plot of sleep during demanding periods against daily productive hours, one dot per faculty (average of its students), with a trend line.');
-    const x = d3.scaleLinear().domain([Math.floor(d3.min(pts, (p) => p.sleep) * 2) / 2 - 0.25, Math.ceil(d3.max(pts, (p) => p.sleep) * 2) / 2 + 0.25]).range([ml, W - mr]);
+    const pts = DATA.respondents, W = Math.max(280, el.clientWidth), H = 300, mt = 14, mb = 44, ml = 44, mr = 12;
+    const svg = svgIn(el, W, H, 'Scatter plot of sleep during demanding periods against daily productive hours, one dot per student, with a trend line.');
+    const x = d3.scaleLinear().domain([0, Math.ceil(d3.max(pts, (p) => p.sleep)) + 0.5]).range([ml, W - mr]);
     const y = d3.scaleLinear().domain([0, Math.max(12, Math.ceil(d3.max(pts, (p) => p.productive)))]).range([H - mb, mt]);
     const tip = tooltip(el), xt = x.ticks(W < 420 ? 4 : 6), yt = y.ticks(4);
     svg.append('g').selectAll('line').data(yt).join('line').attr('x1', ml).attr('x2', W - mr).attr('y1', (t) => y(t)).attr('y2', (t) => y(t)).style('stroke', C.grid);
@@ -357,9 +364,9 @@ html, body { margin: 0; background: var(--bg); color: var(--fg); font-family: va
     svg.append('line').attr('x1', ml).attr('x2', W - mr).attr('y1', H - mb).attr('y2', H - mb).style('stroke', C.axis);
     const [a, b] = x.domain();
     svg.append('line').attr('x1', x(a)).attr('x2', x(b)).attr('y1', y(fit.intercept + fit.slope * a)).attr('y2', y(fit.intercept + fit.slope * b)).style('stroke', C.ref).style('stroke-width', 2).style('stroke-dasharray', '5 4');
-    svg.append('g').selectAll('circle').data(pts).join('circle').attr('cx', (p) => x(p.sleep)).attr('cy', (p) => y(p.productive)).attr('r', 7).style('fill', C.c5).style('stroke', C.panel).style('stroke-width', 2);
-    svg.append('g').selectAll('circle').data(pts).join('circle').attr('cx', (p) => x(p.sleep)).attr('cy', (p) => y(p.productive)).attr('r', 14).style('fill', 'transparent')
-      .on('mousemove', (ev, p) => tip.show(ev, 'Faculty ' + p.faculty, ['Sleep (demanding): ' + fmt(p.sleep, 2) + ' h', 'Productive: ' + fmt(p.productive) + ' h / day'])).on('mouseleave', () => tip.hide());
+    svg.append('g').selectAll('circle').data(pts).join('circle').attr('cx', (p) => x(p.sleep)).attr('cy', (p) => y(p.productive)).attr('r', 6).style('fill', C.c5).style('fill-opacity', 0.85).style('stroke', C.panel).style('stroke-width', 1.5);
+    svg.append('g').selectAll('circle').data(pts).join('circle').attr('cx', (p) => x(p.sleep)).attr('cy', (p) => y(p.productive)).attr('r', 10).style('fill', 'transparent')
+      .on('mousemove', (ev, p) => tip.show(ev, 'Respondent', ['Sleep (demanding): ' + fmt(p.sleep) + ' h', 'Productive: ' + fmt(p.productive) + ' h / day'])).on('mouseleave', () => tip.hide());
   }
 
   // ---------- Render + resize ----------
