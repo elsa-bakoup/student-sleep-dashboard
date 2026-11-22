@@ -12,7 +12,7 @@ An interactive dashboard exploring how students' sleep habits relate to their pr
 - **Half say lack of sleep hurts their work.** 50% of students disagree that they feel productive enough when short on sleep; only 32% agree.
 - **Earlier bedtimes go with better sleep.** Students in bed by 11 PM rate their sleep quality about 1.9 points higher (out of 10) than those going to bed after 1 AM.
 - **Early risers report more productive time.** Students waking at 5–6 AM log 3.4 more productive hours per day than those waking after 10 AM.
-- **No clear link at the faculty level.** Across the 10 faculty averages, more sleep during demanding periods was not associated with more productive hours (r = −0.30, a weak relationship on few data points).
+- **More sleep in crunch time didn't mean more productive hours.** Across individual respondents, students who slept more during demanding periods actually reported slightly fewer productive hours (r = −0.36, a weak-to-moderate link). This likely reflects workload (busier students sleep less and work more) rather than sleep lowering productivity.
 
 ## Features
 
@@ -20,7 +20,7 @@ An interactive dashboard exploring how students' sleep habits relate to their pr
 - Dot plot comparing typical vs. demanding-period sleep by program year, with a year filter
 - Diverging bar chart for the survey's agree/disagree question
 - Bar charts for sleep quality by bedtime and productivity by wake-up time
-- Scatter plot with trend line and correlation, plus a note on how to interpret it
+- Respondent-level scatter plot with trend line and correlation, plus a note on how to interpret it
 - Hover tooltips, responsive layout for desktop and mobile
 
 ## My role
@@ -35,7 +35,7 @@ The survey was designed and conducted as a group project. **I designed and built
 
 ## Data notes
 
-- Sample: 50 students from 10 faculties (n = 50). The scatter plot shows faculty averages, so it can't describe individual students.
+- Sample: 50 students from 10 faculties (n = 50). The scatter plot shows one dot per respondent.
 - “Sleep lost” is typical minus demanding-period sleep; the overall average is the simple mean across program years.
 - Correlation is not causation: these results show associations, not effects of sleep on productivity.
 
